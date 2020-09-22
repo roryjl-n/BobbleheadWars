@@ -324,10 +324,20 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Main Texture
     second: {fileID: 2100000, guid: 66f488220b34849429707f3538daee3c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Main_Texture
+    second: {fileID: 2100000, guid: 34bbef413828548cdb2a7b3bc58a844a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Main_Texture__Bobble_Wars_Enemy_texture_psd
+    second: {fileID: 2100000, guid: fb09f4a186a104564a47e1ee4c9c60ab, type: 2}
   materials:
     materialImportMode: 1
     materialName: 2
-    materialSearch: 0
+    materialSearch: 2
     materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
