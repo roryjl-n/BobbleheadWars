@@ -9,6 +9,10 @@ public class Alien : MonoBehaviour
     //target is where the alien should go.
     public Transform target;
     private NavMeshAgent agent;
+    // navigationUpdate is the amount of time, in milliseconds, for when the alien should update its path.
+    public float navigationUpdate;
+    // navigationTime is a private variable that tracks how much time has  passed since the previous update.
+    private float navigationTime = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +26,19 @@ public class Alien : MonoBehaviour
     {
         if (target != null)
         {
-            agent.destination = target.position;
+            //This code checks to see if a certain amount of time has passed then updates the path.
+            navigationTime += Time.deltaTime;
+            if (navigationTime > navigationUpdate)
+            {
+                agent.destination = target.position;
+                navigationTime = 0;
+            }
         }
+    }
+
+    //
+    void OnTriggerEnter(Collider other)
+    {
+        Destroy(gameObject);
     }
 }
