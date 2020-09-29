@@ -7,12 +7,15 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 50.0f;
     //istance variable to store the CharacterController
     private CharacterController characterController;
+    //reference to the connected head Rigidbody
+    public Rigidbody head;
 
     // Start is called before the first frame update
     void Start()
     {
         //GetComponent() gets a reference to current component passed into the script.
-        characterController = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
+
     }
 
     // Update is called once per frame
@@ -38,5 +41,24 @@ public class PlayerController : MonoBehaviour
         //updates SpaceMarine GameObject's position with the new position. 
         //transform.position = pos;
 
+    }
+
+    //FixedUpdate() handles physics, it’s called at consistent intervals and not subject to frame rate.
+    //Anything that affects a Rigidbody should be updated in FixedUpdate().
+    void FixedUpdate()
+    {
+        //This code moves the head when the marine moves
+        // First, it calculates the movement direction.If the value equals Vector3.zero, then the marine is standing still.
+        //AddForce() provides a direction then multiply it by the force amount.
+        Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"),
+        0, Input.GetAxis("Vertical"));
+        if (moveDirection == Vector3.zero)
+        {
+            // TODO
+        }
+        else
+        {
+            head.AddForce(transform.right * 150, ForceMode.Acceleration);
+        }
     }
 }
