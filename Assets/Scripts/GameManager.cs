@@ -96,7 +96,10 @@ public class GameManager : MonoBehaviour
                         GameObject spawnLocation = spawnPoints[spawnPoint];
                         //Instantiate() will create an instance of any prefab passed into it.
                         //It’ll create an object that is the type Object, so we must cast it into a GameObject.
-                        GameObject newAlien = Instantiate(alien) as GameObject;                        //This positions the alien at the spawn point.                        newAlien.transform.position = spawnLocation.transform.position;
+                        GameObject newAlien = Instantiate(alien) as GameObject;
+                        //This positions the alien at the spawn point.
+                        newAlien.transform.position = spawnLocation.transform.position;
+
                     }
                 }
             }
