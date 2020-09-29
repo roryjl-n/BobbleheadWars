@@ -71,7 +71,9 @@ public class PlayerController : MonoBehaviour
         //cast the ray from the main camera to the mouse position.
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //draws a ray in the Scene view while playing the game
-        Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white);        if (Physics.Raycast(ray, out hit, 1000, layerMask,
+        Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white);
+
+        if (Physics.Raycast(ray, out hit, 1000, layerMask,
             QueryTriggerInteraction.Ignore))
         {
             if (hit.point != currentLookTarget)
@@ -88,6 +90,7 @@ public class PlayerController : MonoBehaviour
             // 3 We do the actual turn by using Lerp().
             transform.rotation = Quaternion.Lerp(transform.rotation,
              rotation, Time.deltaTime * 10.0f);
-        }
+        }
+
     }
 }
