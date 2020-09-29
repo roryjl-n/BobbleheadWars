@@ -348,6 +348,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: e8cf5b3d504b04a09a3d13bd4720c463, type: 2}
+    - target: {fileID: 5545477042616774485, guid: 7f78b096b427d419f9918e4ae4fc4aec,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5834953974792395099, guid: 7f78b096b427d419f9918e4ae4fc4aec,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1650,6 +1655,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 50
   head: {fileID: 771019728}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!143 &1690694943
 CharacterController:
   m_ObjectHideFlags: 0

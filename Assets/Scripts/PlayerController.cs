@@ -9,6 +9,11 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     //reference to the connected head Rigidbody
     public Rigidbody head;
+    //lets us indicate what layers the ray should hit. 
+    public LayerMask layerMask;
+    //where we want the marine to stare.
+    //we set value to zero at the start of the game.
+    private Vector3 currentLookTarget = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -60,5 +65,29 @@ public class PlayerController : MonoBehaviour
         {
             head.AddForce(transform.right * 150, ForceMode.Acceleration);
         }
+
+        // creates an empty RaycastHit. If we get a hit, it’ll be populated with an object.
+        RaycastHit hit;
+        //cast the ray from the main camera to the mouse position.
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //draws a ray in the Scene view while playing the game
+        Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white);        if (Physics.Raycast(ray, out hit, 1000, layerMask,
+            QueryTriggerInteraction.Ignore))
+        {
+            if (hit.point != currentLookTarget)
+            {
+                currentLookTarget = hit.point;
+            }
+
+            // 1 We get the target position. 
+            Vector3 targetPosition = new Vector3(hit.point.x,
+             transform.position.y, hit.point.z);
+            // 2 We calculate the current quaternion, which is used to determine rotation.
+            Quaternion rotation = Quaternion.LookRotation(targetPosition -
+             transform.position);
+            // 3 We do the actual turn by using Lerp().
+            transform.rotation = Quaternion.Lerp(transform.rotation,
+             rotation, Time.deltaTime * 10.0f);
+        }
     }
 }
