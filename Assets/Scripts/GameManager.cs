@@ -25,17 +25,56 @@ public class GameManager : MonoBehaviour
     private float generatedSpawnTime = 0;
     //Will track the milliseconds since the last spawn.
     private float currentSpawnTime = 0;
-
+    //GameObject the player must collide with to get the update 
+    public GameObject upgradePrefab;
+    //reference to Gun script because the gun needs to associate it with the upgrade.
+    public Gun gun;
+    //the maximum time that will pass before the upgrade spawns.
+    public float upgradeMaxTimeSpawn = 7.5f;
+    // tracks whether or not the upgrade has spawned since it can only spawn once.
+    private bool spawnedUpgrade = false;
+    //track the current time until the upgrade spawns. 
+    private float actualUpgradeTime = 0;
+    private float currentUpgradeTime = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //The upgrade time is a random number generated from Random.Range()
+        //The minimum value is the maximum value minus 3,
+        //Mathf.Abs makes sure it’s a positive number.
+        actualUpgradeTime = Random.Range(upgradeMaxTimeSpawn - 3.0f,
+        upgradeMaxTimeSpawn);
+        actualUpgradeTime = Mathf.Abs(actualUpgradeTime);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // This adds the amount of time from the past frame.
+        currentUpgradeTime += Time.deltaTime;
+
+        if (currentUpgradeTime > actualUpgradeTime)
+        {
+            // 1 After the random time period passes, this checks if the upgrade has already spawned
+            if (!spawnedUpgrade)
+            {
+                // 2 The upgrade will appear in one of the alien spawn points. 
+                int randomNumber = Random.Range(0, spawnPoints.Length - 1);
+                GameObject spawnLocation = spawnPoints[randomNumber];
+                // 3 This section handles the business of spawning the upgrade and associating the gun with it.
+                GameObject upgrade = Instantiate(upgradePrefab) as GameObject;
+                Upgrade upgradeScript = upgrade.GetComponent<Upgrade>();
+                upgradeScript.gun = gun;
+                upgrade.transform.position = spawnLocation.transform.position;
+                // 4 This informs the code that an upgrade has been spawned.
+                spawnedUpgrade = true;
+
+                //auditory queue when the power-up is available.
+                SoundManager.Instance.PlayOneShot(SoundManager.Instance.powerUpAppear);
+            }
+        }
+
         //Accumulates the amount of time that's passed between each frame update.
         currentSpawnTime += Time.deltaTime;
 
