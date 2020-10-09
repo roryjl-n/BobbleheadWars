@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+
+    private AudioSource audioSource;
+
     // set the bulletPrefab to the bullet prefab
     public GameObject bulletPrefab;
     //  set the launchPosition to the position of the barrel of the Space Marine’s gun.
@@ -24,12 +27,16 @@ public class Gun : MonoBehaviour
         space marine, ensuring the bullet travels in same the direction as the marine faces. */
         bullet.GetComponent<Rigidbody>().velocity =
         transform.parent.forward * 100;
+
+        //This code plays the shooting sound.
+        audioSource.PlayOneShot(SoundManager.Instance.gunFire);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // gets a reference to the attached AudioSource 
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame

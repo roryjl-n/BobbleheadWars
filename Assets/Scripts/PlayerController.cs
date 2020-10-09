@@ -65,7 +65,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            bodyAnimator.SetBool("IsMoving", true);
+            bodyAnimator.SetBool("IsMoving", true);
+
             head.AddForce(transform.right * 150, ForceMode.Acceleration);
         }
 
