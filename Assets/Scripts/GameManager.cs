@@ -149,9 +149,26 @@ public class GameManager : MonoBehaviour
                           newAlien.transform.position.y, player.transform.position.z);
                         newAlien.transform.LookAt(targetRotation);
 
+                        /* We call AddListener on the event and pass in the method to call whenever that event occurs
+                         *  in this case, AlienDestroyed */
+                        alienScript.OnDestroy.AddListener(AlienDestroyed);
+
                     }
                 }
             }
         }
+    }
+
+    /*This prints a simple message to the console to let you know that the GameManager got a notification
+    public void AlienDestroyed()
+    {
+        Debug.Log("dead alien");
+    }*/
+
+    //This officially decreases the number of aliens on screen.
+    public void AlienDestroyed()
+    {
+        aliensOnScreen -= 1;
+        totalAliens -= 1;
     }
 }

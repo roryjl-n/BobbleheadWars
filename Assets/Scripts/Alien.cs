@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 //access the NavmeshAgent classes
 using UnityEngine.AI;
+//This allows us to access UnityEvent in code.
+using UnityEngine.Events;
 
 public class Alien : MonoBehaviour
 {
@@ -13,6 +15,19 @@ public class Alien : MonoBehaviour
     public float navigationUpdate;
     // navigationTime is a private variable that tracks how much time has  passed since the previous update.
     private float navigationTime = 0;
+    //The UnityEvent custom event type that we can configure in the Inspector.
+    public UnityEvent OnDestroy;
+    // This destroys the alien.
+    public void Die()
+    {
+        //This notifies all listeners, including the GameManager, of the alien’s death.
+        OnDestroy.Invoke();
+
+        //This removes any listeners that are listening to the event
+        OnDestroy.RemoveAllListeners();
+
+        Destroy(gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +54,8 @@ public class Alien : MonoBehaviour
     //
     void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        // We’ve refactored the destroy code into another method.
+        Die();
 
         //
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
