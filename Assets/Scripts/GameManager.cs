@@ -51,6 +51,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //If there’s no player, the GameManager won’t spawn enemies.
+        if (player == null)
+        {
+            return;
+        }
+
         // This adds the amount of time from the past frame.
         currentUpgradeTime += Time.deltaTime;
 

@@ -16,6 +16,73 @@ public class PlayerController : MonoBehaviour
     private Vector3 currentLookTarget = Vector3.zero;
     //
     public Animator bodyAnimator;
+    //This provides an array of force values for the camera.
+    public float[] hitForce;
+    //timeBetweenHits is the grace period after the hero sustains damage.
+    public float timeBetweenHits = 2.5f;
+    //isHit is a flag that indicates the hero took a hit.
+    private bool isHit = false;
+    //timeSinceHit tracks of the amount of time in the grace period.
+    private float timeSinceHit = 0;
+    // references the number of times the hero took a hit. 
+    // It’s also used to get the shake intensity for the camera shake.
+    private int hitNumber = -1;
+    //marineBody is the marine’s body. 
+    public Rigidbody marineBody;
+    // isDead keeps track of the player’s current death state.
+    private bool isDead = false;
+
+    //
+    public void Die()
+    {
+        //You set IsMoving to false since the marine is dead
+        bodyAnimator.SetBool("IsMoving", false);
+        //We set the parent to null to remove the current GameObject from its parent.
+        marineBody.transform.parent = null;
+        //by enabling Use Gravity and disabling IsKinematic, the body will drop and roll, and we enable a collider to make this all work.
+        marineBody.isKinematic = false;
+        marineBody.useGravity = true;
+        marineBody.gameObject.GetComponent<CapsuleCollider>().enabled = true;
+        // Disabling the gun prevents the player from firing after death.
+        marineBody.gameObject.GetComponent<Gun>().enabled = false;
+
+        //First, this destroys the joint to release the head from the body. 
+        //Then, like the body, we remove the parent and enable gravity.
+        //Finally, we destroy the current GameObject while playing the death sound.
+        Destroy(head.gameObject.GetComponent<HingeJoint>());
+        head.transform.parent = null;
+        head.useGravity = true;
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.marineDeath);
+        Destroy(gameObject);
+    }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        Alien alien = other.gameObject.GetComponent<Alien>();
+        if (alien != null)
+        { // 1 First, you check if the colliding object has an Alien script attached to it
+            // 1  If it’s an alien and the player hasn’t been hit, then the player is officially considered hit.
+            if (!isHit)
+            {
+                hitNumber += 1; // 2 The hitNumber increases by one, after which you get a reference to CameraShake().
+                CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
+                if (hitNumber < hitForce.Length) // 3 If the current hitNumber is less than the number of force values for the camera shake, then the hero is still alive.
+                {
+                    cameraShake.intensity = hitForce[hitNumber];
+                    cameraShake.Shake();
+                }
+                else
+                {
+                    Die();
+                }
+                isHit = true; // 4 This sets isHit to true, plays the grunt sound and kills the alien.
+                SoundManager.Instance.PlayOneShot(SoundManager.Instance.hurt);
+            }
+            alien.Die();
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +114,18 @@ public class PlayerController : MonoBehaviour
 
         //updates SpaceMarine GameObject's position with the new position. 
         //transform.position = pos;
+
+        //This tabulates time since the last hit to the hero.
+        // If that time exceeds timeBetweenHits, the player can take more hits.
+        if (isHit)
+        {
+            timeSinceHit += Time.deltaTime;
+            if (timeSinceHit > timeBetweenHits)
+            {
+                isHit = false;
+                timeSinceHit = 0;
+            }
+        }
 
     }
 
