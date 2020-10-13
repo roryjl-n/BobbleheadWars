@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     //track the current time until the upgrade spawns. 
     private float actualUpgradeTime = 0;
     private float currentUpgradeTime = 0;
+    //This contains a reference to the death floor.
+    public GameObject deathFloor;
 
     // Start is called before the first frame update
     void Start()
@@ -159,6 +161,10 @@ public class GameManager : MonoBehaviour
                         /* We call AddListener on the event and pass in the method to call whenever that event occurs
                          *  in this case, AlienDestroyed */
                         alienScript.OnDestroy.AddListener(AlienDestroyed);
+
+
+                        alienScript.GetDeathParticles().SetDeathFloor(deathFloor);
+
 
                     }
                 }

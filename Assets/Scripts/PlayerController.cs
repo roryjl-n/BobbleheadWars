@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     // isDead keeps track of the player’s current death state.
     private bool isDead = false;
 
+    private DeathParticles deathParticles;
+
     //
     public void Die()
     {
@@ -53,6 +55,9 @@ public class PlayerController : MonoBehaviour
         head.transform.parent = null;
         head.useGravity = true;
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.marineDeath);
+
+        deathParticles.Activate();
+
         Destroy(gameObject);
     }
 
@@ -90,6 +95,7 @@ public class PlayerController : MonoBehaviour
         //GetComponent() gets a reference to current component passed into the script.
         characterController = GetComponent<CharacterController>();
 
+        deathParticles = gameObject.GetComponentInChildren<DeathParticles>();
     }
 
     // Update is called once per frame

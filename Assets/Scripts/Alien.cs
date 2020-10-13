@@ -35,13 +35,33 @@ public class Alien : MonoBehaviour
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
 
         //
-        head.GetComponent<SelfDestruct>().Initiate();
+        head.GetComponent<SelfDestruct>().Initiate();
+
+        //This makes the blood splatter when an alien dies.
+        if (deathParticles)
+        {
+            deathParticles.transform.parent = null;
+            deathParticles.Activate();
+        }
+
         Destroy(gameObject);
     }
     //head will help us launch the head
     public Rigidbody head;
     // isAlive will track the alien’s state.
     public bool isAlive = true;
+
+    private DeathParticles deathParticles;
+   
+    public DeathParticles GetDeathParticles()
+    {
+        if (deathParticles == null)
+        {
+            //It returns the first death particle script that it finds.
+            deathParticles = GetComponentInChildren<DeathParticles>();
+        }
+        return deathParticles;
+    }
 
     // Start is called before the first frame update
     void Start()
