@@ -17,17 +17,31 @@ public class Alien : MonoBehaviour
     private float navigationTime = 0;
     //The UnityEvent custom event type that we can configure in the Inspector.
     public UnityEvent OnDestroy;
-    // This destroys the alien.
+    // This code works similarly to the marine’s death, but we disable the Animator for the alien.
+    // In addition, this code launches the head off the body.
     public void Die()
     {
-        //This notifies all listeners, including the GameManager, of the alien’s death.
+        isAlive = false;
+        head.GetComponent<Animator>().enabled = false;
+        head.isKinematic = false;
+        head.useGravity = true;
+        head.GetComponent<SphereCollider>().enabled = true;
+        head.gameObject.transform.parent = null;
+        head.velocity = new Vector3(0, 26.0f, 3.0f);
+
+        //This block notifies the listeners, removes them and then it deletes the GameObject.
         OnDestroy.Invoke();
-
-        //This removes any listeners that are listening to the event
         OnDestroy.RemoveAllListeners();
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
 
+        //
+        head.GetComponent<SelfDestruct>().Initiate();
         Destroy(gameObject);
     }
+    //head will help us launch the head
+    public Rigidbody head;
+    // isAlive will track the alien’s state.
+    public bool isAlive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +53,7 @@ public class Alien : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (target != null)
+        if (isAlive)
         {
             //This code checks to see if a certain amount of time has passed then updates the path.
             navigationTime += Time.deltaTime;
@@ -51,13 +65,13 @@ public class Alien : MonoBehaviour
         }
     }
 
-    //
+    // Here we check isAlive first.
     void OnTriggerEnter(Collider other)
     {
-        // We’ve refactored the destroy code into another method.
-        Die();
-
-        //
-        SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
+        if (isAlive)
+        {
+            Die();
+            SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
+        }
     }
 }
