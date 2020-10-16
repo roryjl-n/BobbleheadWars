@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     private float currentUpgradeTime = 0;
     //This contains a reference to the death floor.
     public GameObject deathFloor;
+    // public reference for the Arena Animator
+    public Animator arenaAnimator;
 
     // Start is called before the first frame update
     void Start()
@@ -183,5 +185,19 @@ public class GameManager : MonoBehaviour
     {
         aliensOnScreen -= 1;
         totalAliens -= 1;
+
+
+        if (totalAliens == 0)
+        {
+            Invoke("endGame", 2.0f);
+        }
+    }
+
+    //This kicks off the entire process and you just need to call it.
+    private void endGame()
+    {
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.
+        elevatorArrived);
+        arenaAnimator.SetTrigger("PlayerWon");
     }
 }
