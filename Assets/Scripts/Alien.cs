@@ -73,7 +73,7 @@ public class Alien : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isAlive)
+        if (isAlive && target != null)
         {
             //This code checks to see if a certain amount of time has passed then updates the path.
             navigationTime += Time.deltaTime;

@@ -861,7 +861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9efe26825c6d3b24aac340ea97076054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shakeDecay: 0.002
+  shakeDecay: 0.02
   intensity: 0.3
 --- !u!20 &282840813
 Camera:
